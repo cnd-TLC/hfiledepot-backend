@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('pmo_end_user_dept');
             $table->string('source_of_funds');
             $table->enum('status', ['Pending', 'Approved', 'Rejected'])->default('Pending');
+            $table->string('remarks')->nullable();
             $table->json('attachments')->nullable();
             $table->timestamps();
         });

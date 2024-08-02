@@ -92,8 +92,13 @@ class ProcurementProjectManagementPlanController extends Controller
 
     public function set_approval(Request $request, $id)
     {
+        $reason = null;
+        if ($request->reason)
+            $reason = $request->reason;
+
         $ppmp = ProcurementProjectManagementPlan::find($id);
         $ppmp->status = $request->status;
+        $ppmp->remarks = $reason;
         $result = $ppmp->save();
 
         if ($result)

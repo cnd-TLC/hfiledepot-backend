@@ -11,6 +11,9 @@ use App\Http\Controllers\PpmpItemController;
 use App\Http\Controllers\PurchaseRequestController;
 use App\Http\Controllers\PrItemController;
 use App\Http\Controllers\AttachmentsController;
+use App\Http\Controllers\ExportController;
+use App\Http\Controllers\ImportController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,8 +34,9 @@ Route::post('logout', [AuthController::class, 'logout']);
 
 Route::middleware('auth:sanctum')->group(function(){
     
-    // CURRENT USER
+    // LOGIN INFO
     Route::get('user', [AuthController::class, 'user']);
+    Route::get('refresh', [AuthController::class, 'refresh']);
 
     Route::get('list_of_users/{size}', [UserController::class, 'index']);
     Route::post('add_users', [UserController::class, 'store']);
@@ -68,6 +72,7 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::get('list_of_user_pr/{size}', [PurchaseRequestController::class, 'index_user']);
     Route::post('add_pr', [PurchaseRequestController::class, 'store']);
     Route::put('update_pr/{id}', [PurchaseRequestController::class, 'update']);
+    // Route::put('update_pr_purpose/{id}', [PurchaseRequestController::class, 'update_pr_purpose']);
     Route::put('set_approval_pr_bac/{id}', [PurchaseRequestController::class, 'set_approval_bac']);
     Route::put('set_approval_pr/{id}', [PurchaseRequestController::class, 'set_approval']);
     Route::delete('remove_pr/{id}', [PurchaseRequestController::class, 'destroy']);
@@ -82,6 +87,12 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::get('get_attachments/{type}/{id}', [AttachmentsController::class, 'index']);
     Route::get('download_attachment/{type}/{id}/{file}', [AttachmentsController::class, 'download']);
     Route::delete('remove_attachment/{type}/{id}/{file}', [AttachmentsController::class, 'destroy']);
-   
-    Route::post('bulk_upload/{type}/{id}', [AttachmentsController::class, 'bulk_upload']);
+
+    Route::get('export_users', [ExportController::class, 'export_users']);
+    Route::post('import_files/{type}/{id}', [ImportController::class, 'import_files']);
+
+    Route::get('requests_for_approval/{year}', [DashboardController::class, 'getPendingCount']);
+    Route::get('requests_per_office/{year}', [DashboardController::class, 'getOfficeRequestsCount']);
+    Route::get('department_requests_count/{status}/{year}', [DashboardController::class, 'getDepartmentRequestsStatusCount']);
+
 });

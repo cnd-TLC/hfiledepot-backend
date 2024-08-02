@@ -12,7 +12,7 @@ class PpmpItemController extends Controller
         # fix this if possible
         $department = explode('(', auth()->user()->department)[1];
         $department = explode(')', $department)[0].'-'.$id;
-        $year = date('Y');
+        $year = date('y');
         $lastCode = PpmpItem::where('ppmp_id', $id)->orderBy('id', 'desc')->value('code');
 
         if($lastCode){
@@ -25,7 +25,7 @@ class PpmpItemController extends Controller
 
         $code = str_pad($latestCode, 4, '0', STR_PAD_LEFT);
 
-        $setCode = $department.'-'.$year.'-'.$code;
+        $setCode = $department.$year.'-'.$code;
 
         return response()->json(['code' => $setCode]);
     }
@@ -52,7 +52,7 @@ class PpmpItemController extends Controller
         $item->category = $request->category;
         $item->general_desc = $request->general_desc;
         $item->unit = $request->unit;
-        $item->quantity = $request->quantity;
+        $item->quantity = $request->lumpsum ? null : $request->quantity;
         $item->lumpsum = $request->lumpsum;
         $item->mode_of_procurement = $request->mode_of_procurement;
         $item->estimated_budget = $request->estimated_budget;
@@ -87,7 +87,7 @@ class PpmpItemController extends Controller
         $item->category = $request->category;
         $item->general_desc = $request->general_desc;
         $item->unit = $request->unit;
-        $item->quantity = $request->quantity;
+        $item->quantity = $request->lumpsum ? null : $request->quantity;
         $item->lumpsum = $request->lumpsum;
         $item->mode_of_procurement = $request->mode_of_procurement;
         $item->estimated_budget = $request->estimated_budget;

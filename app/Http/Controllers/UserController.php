@@ -9,9 +9,18 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function index($size)
+    public function index(Request $request, $size)
     {
-        $data = User::select('id', 'name', 'email', 'username', 'department', 'role', 'status')->where('id', '!=', auth()->user()->id)->paginate($size);
+        $data = User::select('id', 'name', 'email', 'username', 'department', 'role', 'status')
+                ->where('id', '!=', auth()->user()->id)
+                ->where(function ($query) use ($request) {
+                    $query->where('name', 'LIKE', "%$request->search%")
+                        ->orWhere('email', 'LIKE', "%$request->search%")
+                        ->orWhere('department', 'LIKE', "%$request->search%")
+                        ->orWhere('role', 'LIKE', "%$request->search%")
+                        ->orWhere('status', 'LIKE', "%$request->search%");
+                    })
+                ->paginate($size);
 
         return response()->json([
             'retrievedData' => $data->items(),

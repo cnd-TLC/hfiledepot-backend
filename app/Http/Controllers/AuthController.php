@@ -37,6 +37,17 @@ class AuthController extends Controller
         ], 200);
     }
 
+    public function refresh(Request $request)
+    {
+        $user = $request->user();
+        $token = $user->createToken('personal-token')->plainTextToken;
+
+        return response()
+                ->json(compact('token', 'user'))
+                ->header('authorization', $token)
+                ->header('Access-Control-Expose-Headers', 'Authorization');
+    }
+
     public function user()
     {
         $user = User::find(auth()->id());

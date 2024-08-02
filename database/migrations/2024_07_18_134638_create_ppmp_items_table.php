@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('category');
             $table->string('general_desc');
             $table->string('unit')->nullable();
-            $table->integer('quantity');
+            $table->integer('quantity')->nullable();
             $table->boolean('lumpsum')->default(false);
             $table->enum('mode_of_procurement', ['Bidding', 'Shopping']);
             $table->decimal('estimated_budget', 9, 2);

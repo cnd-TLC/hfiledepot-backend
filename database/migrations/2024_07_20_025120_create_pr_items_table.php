@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('unit')->nullable();
             $table->string('category');
             $table->string('item_description');
-            $table->string('quantity');
+            $table->string('quantity')->nullable();
             $table->decimal('unit_cost', 9, 2);
             $table->boolean('lumpsum')->default(false);
             $table->enum('mode_of_procurement', ['Bidding', 'Shopping']);

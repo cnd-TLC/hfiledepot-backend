@@ -52,8 +52,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'role_modules' => json_encode([])
         ]);
         RolesAndPermissions::create([
-            'role' => 'CAO Head',
-            'description' => 'Manages CAO modules',
+            'role' => 'Accounting Head',
+            'description' => 'Manages Accounting Office modules',
             'role_modules' => json_encode([])
         ]);
     }

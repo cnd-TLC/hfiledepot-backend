@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\DB;
 use App\Models\PrItem;
 use App\Models\PpmpItem;
 
@@ -10,11 +11,15 @@ class PrItemController extends Controller
 {
     public function index_department()
     {
-        $data = PpmpItem::select('ppmp_items.*', 'procurement_project_management_plans.pmo_end_user_dept as department', 'procurement_project_management_plans.year as year')
+        $currentMonth = date('M');
+        $monthCol = strtolower($currentMonth);
+
+        $data = PpmpItem::select('ppmp_items.*', 'procurement_project_management_plans.pmo_end_user_dept as department', 'procurement_project_management_plans.year as year', "ppmp_items.$monthCol as quantity")
                 ->join('procurement_project_management_plans', 'ppmp_items.ppmp_id', '=', 'procurement_project_management_plans.id')
                 ->where('procurement_project_management_plans.pmo_end_user_dept', auth()->user()->department)
+                ->whereNotNull("ppmp_items.$monthCol")
                 ->where('procurement_project_management_plans.status', 'Approved')
-                ->where('procurement_project_management_plans.year', date('Y'))
+                ->where('procurement_project_management_plans.year', date('Y')) 
                 ->get();
 
         return response()->json([
@@ -44,7 +49,7 @@ class PrItemController extends Controller
         $item->unit = $request->unit;
         $item->category = $request->category;
         $item->item_description = $request->item_description;
-        $item->quantity = $request->quantity;
+        $item->quantity = $request->lumpsum ? null : $request->quantity;
         $item->unit_cost = $request->unit_cost;
         $item->lumpsum = $request->lumpsum;
         $item->mode_of_procurement = $request->mode_of_procurement;
@@ -68,7 +73,7 @@ class PrItemController extends Controller
         $item->unit = $request->unit;
         $item->category = $request->category;
         $item->item_description = $request->item_description;
-        $item->quantity = $request->quantity;
+        $item->quantity = $request->lumpsum ? null : $request->quantity;
         $item->unit_cost = $request->unit_cost;
         $item->lumpsum = $request->lumpsum;
         $item->mode_of_procurement = $request->mode_of_procurement;
