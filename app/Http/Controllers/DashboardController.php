@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\PurchaseRequest;
+use App\Models\Notification;
 
 class DashboardController extends Controller
 {
@@ -15,7 +16,11 @@ class DashboardController extends Controller
                 ->where('department', auth()->user()->department)
                 ->count();
 
-        return response()->json(['count' => $count]);
+        $overall = PurchaseRequest::where('status', $status)
+                ->whereYear('created_at', $year)
+                ->count();
+
+        return response()->json(['count' => $count, 'overall' => $overall]);
     }
 
     public function getPendingCount($year)
@@ -86,5 +91,16 @@ class DashboardController extends Controller
         return response()->json(['retrievedData' => $requestCountsArray]);
     }
 
+    public function getNotifications($year)
+    {
+        $data = Notification::where('receiver_department', auth()->user()->department)
+                ->orderBy('id', 'desc')
+                ->whereYear('created_at', $year)
+                ->limit(5)
+                ->get();
 
+        return response()->json([
+            'retrievedData' => $data
+        ]);
+    }
 }

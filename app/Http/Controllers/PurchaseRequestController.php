@@ -4,25 +4,86 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\PurchaseRequest;
+use App\Models\Notification;
 
 class PurchaseRequestController extends Controller
 {
-    public function index($size)
+    public function index(Request $request, $size)
     {
         $data = [];
 
-        if (auth()->user()->department == 'City Budget Office (CBO)')
-            $data = PurchaseRequest::paginate($size);
-        if (auth()->user()->department == 'City Treasurer\'s Office (CTO)')
-            $data = PurchaseRequest::where('approved_by_cbo_name', '!=', null)->paginate($size);
-        if (auth()->user()->department == 'City Mayor\'s Office (CMO)')
-            $data = PurchaseRequest::where('approved_by_cto_name', '!=', null)->paginate($size);
-        if (auth()->user()->department == 'Bids and Awards Committee (BAC)')
-            $data = PurchaseRequest::where('approved_by_cmo_name', '!=', null)->paginate($size);
-        if (auth()->user()->department == 'City General Services Office (CGSO)')
-            $data = PurchaseRequest::where('approved_by_bac_name', '!=', null)->paginate($size);
-        if (auth()->user()->department == 'City Accountant\'s Office (CAccO)')
-            $data = PurchaseRequest::where('approved_by_cgso_name', '!=', null)->paginate($size);
+        $department = auth()->user()->department;
+
+        if ($department == 'City Budget Office (CBO)')
+            $data = PurchaseRequest::where(function ($query) use ($request) {
+                    $query->where('pr_no', 'LIKE', "%$request->search%")
+                        ->orWhere('department', 'LIKE', "%$request->search%")
+                        ->orWhere('section', 'LIKE', "%$request->search%")
+                        ->orWhere('requested_by', 'LIKE', "%$request->search%")
+                        ->orWhere('fpp', 'LIKE', "%$request->search%")
+                        ->orWhere('fund', 'LIKE', "%$request->search%")
+                        ->orWhere('status', 'LIKE', "%$request->search%");
+                    })->paginate($size);
+        if ($department == 'City Treasurer\'s Office (CTO)')
+            $data = PurchaseRequest::where('approved_by_cbo_name', '!=', null)
+                ->where(function ($query) use ($request) {
+                    $query->where('pr_no', 'LIKE', "%$request->search%")
+                        ->orWhere('department', 'LIKE', "%$request->search%")
+                        ->orWhere('section', 'LIKE', "%$request->search%")
+                        ->orWhere('requested_by', 'LIKE', "%$request->search%")
+                        ->orWhere('fpp', 'LIKE', "%$request->search%")
+                        ->orWhere('fund', 'LIKE', "%$request->search%")
+                        ->orWhere('status', 'LIKE', "%$request->search%");
+                    })
+                ->paginate($size);
+        if ($department == 'City Mayor\'s Office (CMO)')
+            $data = PurchaseRequest::where('approved_by_cto_name', '!=', null)
+                ->where(function ($query) use ($request) {
+                    $query->where('pr_no', 'LIKE', "%$request->search%")
+                        ->orWhere('department', 'LIKE', "%$request->search%")
+                        ->orWhere('section', 'LIKE', "%$request->search%")
+                        ->orWhere('requested_by', 'LIKE', "%$request->search%")
+                        ->orWhere('fpp', 'LIKE', "%$request->search%")
+                        ->orWhere('fund', 'LIKE', "%$request->search%")
+                        ->orWhere('status', 'LIKE', "%$request->search%");
+                    })
+                ->paginate($size);
+        if ($department == 'Bids and Awards Committee (BAC)')
+            $data = PurchaseRequest::where('approved_by_cmo_name', '!=', null)
+                ->where(function ($query) use ($request) {
+                    $query->where('pr_no', 'LIKE', "%$request->search%")
+                        ->orWhere('department', 'LIKE', "%$request->search%")
+                        ->orWhere('section', 'LIKE', "%$request->search%")
+                        ->orWhere('requested_by', 'LIKE', "%$request->search%")
+                        ->orWhere('fpp', 'LIKE', "%$request->search%")
+                        ->orWhere('fund', 'LIKE', "%$request->search%")
+                        ->orWhere('status', 'LIKE', "%$request->search%");
+                    })
+                ->paginate($size);
+        if ($department == 'City General Services Office (CGSO)')
+            $data = PurchaseRequest::where('approved_by_bac_name', '!=', null)
+                ->where(function ($query) use ($request) {
+                    $query->where('pr_no', 'LIKE', "%$request->search%")
+                        ->orWhere('department', 'LIKE', "%$request->search%")
+                        ->orWhere('section', 'LIKE', "%$request->search%")
+                        ->orWhere('requested_by', 'LIKE', "%$request->search%")
+                        ->orWhere('fpp', 'LIKE', "%$request->search%")
+                        ->orWhere('fund', 'LIKE', "%$request->search%")
+                        ->orWhere('status', 'LIKE', "%$request->search%");
+                    })
+                ->paginate($size);
+        if ($department == 'City Accountant\'s Office (CAccO)')
+            $data = PurchaseRequest::where('approved_by_cgso_name', '!=', null)
+                ->where(function ($query) use ($request) {
+                    $query->where('pr_no', 'LIKE', "%$request->search%")
+                        ->orWhere('department', 'LIKE', "%$request->search%")
+                        ->orWhere('section', 'LIKE', "%$request->search%")
+                        ->orWhere('requested_by', 'LIKE', "%$request->search%")
+                        ->orWhere('fpp', 'LIKE', "%$request->search%")
+                        ->orWhere('fund', 'LIKE', "%$request->search%")
+                        ->orWhere('status', 'LIKE', "%$request->search%");
+                    })
+                ->paginate($size);
 
         if($data)
             return response()->json([
@@ -45,9 +106,19 @@ class PurchaseRequestController extends Controller
         ]);
     }
 
-    public function index_user($size)
+    public function index_user(Request $request, $size)
     {
-        $data = PurchaseRequest::where('department', auth()->user()->department)->paginate($size);
+        $data = PurchaseRequest::where('department', auth()->user()->department)
+                ->where(function ($query) use ($request) {
+                    $query->where('pr_no', 'LIKE', "%$request->search%")
+                        ->orWhere('department', 'LIKE', "%$request->search%")
+                        ->orWhere('section', 'LIKE', "%$request->search%")
+                        ->orWhere('requested_by', 'LIKE', "%$request->search%")
+                        ->orWhere('fpp', 'LIKE', "%$request->search%")
+                        ->orWhere('fund', 'LIKE', "%$request->search%")
+                        ->orWhere('status', 'LIKE', "%$request->search%");
+                    })
+                ->paginate($size);
 
         return response()->json([
             'retrievedData' => $data->items(),
@@ -127,17 +198,25 @@ class PurchaseRequestController extends Controller
 
     public function set_approval_bac(Request $request, $id)
     {
-        $user = null;
-        $user = auth()->user()->name;
-        $approval = PurchaseRequest::find($id);
-        $approval->approved_by_bac_name = $user;
-        $approval->approved_by_bac = date('Y-m-d H:i:s');
-        $approval->pr_no = $request->pr_no;
-        $approval->section = $request->section;
-        $approval->fund = $request->fund;
-        $approval->fpp = $request->fpp;
+        $notification_sender = auth()->user()->name;
+        $approval_user = $notification_sender;
+        $department = auth()->user()->department;
+        $purchase_request = PurchaseRequest::find($id);
+        $purchase_request->approved_by_bac_name = $approval_user;
+        $purchase_request->approved_by_bac = date('Y-m-d H:i:s');
+        $purchase_request->pr_no = $request->pr_no;
+        $purchase_request->section = $request->section;
+        $purchase_request->fund = $request->fund;
+        $purchase_request->fpp = $request->fpp;
         // $approval->attachments = $request->attachments
-        $result = $approval->save();
+        $result = $purchase_request->save();
+
+        $notification = new Notification;
+        $notification->sender = $notification_sender;
+        $notification->sender_department = $department;
+        $notification->receiver_department = $purchase_request->department;
+        $notification->message = $request->status == 'Approved' ? 'Your purchase request has been approved by ' . $notification_sender . ' from ' . $department . '.' : 'Your purchase request has been rejected by ' . $notification_sender . ' from ' . $department . '.';
+        $notification->save();
         
         if ($result)
             return response()->json([
@@ -154,44 +233,55 @@ class PurchaseRequestController extends Controller
         if ($request->reason)
             $reason = $request->reason;
 
-        $user = null;
+        $approval_user = null;
+        $notification_sender = auth()->user()->name;
+        $department = auth()->user()->department;
         $status = 'Rejected';
+
         if ($request->status == 'Approved'){
-            $user = auth()->user()->name;
-            if(auth()->user()->department != 'City Accountant\'s Office (CAccO)')
+            $approval_user = $notification_sender;
+            if($department != 'City Accountant\'s Office (CAccO)')
                 $status = 'Pending';
             else
                 $status = 'Approved';
         }
 
-        $approval = PurchaseRequest::find($id);
-        if (auth()->user()->department == 'City Budget Office (CBO)'){
-            $approval->approved_by_cbo = date('Y-m-d H:i:s');
-            $approval->approved_by_cbo_name = $user;
+        $purchase_request = PurchaseRequest::find($id);
+        if ($department == 'City Budget Office (CBO)'){
+            $purchase_request->approved_by_cbo = date('Y-m-d H:i:s');
+            $purchase_request->approved_by_cbo_name = $approval_user;
         }
-        if (auth()->user()->department == 'City Treasurer\'s Office (CTO)'){
-            $approval->approved_by_cto = date('Y-m-d H:i:s');
-            $approval->approved_by_cto_name = $user;
+        if ($department == 'City Treasurer\'s Office (CTO)'){
+            $purchase_request->approved_by_cto = date('Y-m-d H:i:s');
+            $purchase_request->approved_by_cto_name = $approval_user;
         }
-        if (auth()->user()->department == 'City Mayor\'s Office (CMO)'){
-            $approval->approved_by_cmo = date('Y-m-d H:i:s');
-            $approval->approved_by_cmo_name = $user;
+        if ($department == 'City Mayor\'s Office (CMO)'){
+            $purchase_request->approved_by_cmo = date('Y-m-d H:i:s');
+            $purchase_request->approved_by_cmo_name = $approval_user;
         }
-        if (auth()->user()->department == 'Bids and Awards Committee (BAC)'){
-            $approval->approved_by_bac = date('Y-m-d H:i:s');
-            $approval->approved_by_bac_name = $user;
+        if ($department == 'Bids and Awards Committee (BAC)'){
+            $purchase_request->approved_by_bac = date('Y-m-d H:i:s');
+            $purchase_request->approved_by_bac_name = $approval_user;
         }
-        if (auth()->user()->department == 'City General Services Office (CGSO)'){
-            $approval->approved_by_cgso = date('Y-m-d H:i:s');
-            $approval->approved_by_cgso_name = $user;
+        if ($department == 'City General Services Office (CGSO)'){
+            $purchase_request->approved_by_cgso = date('Y-m-d H:i:s');
+            $purchase_request->approved_by_cgso_name = $approval_user;
         }
-        if (auth()->user()->department == 'City Accountant\'s Office (CAccO)'){
-            $approval->approved_by_cao = date('Y-m-d H:i:s');
-            $approval->approved_by_cao_name = $user;
+        if ($department == 'City Accountant\'s Office (CAccO)'){
+            $purchase_request->approved_by_cao = date('Y-m-d H:i:s');
+            $purchase_request->approved_by_cao_name = $approval_user;
         }
-        $approval->status = $status;
-        $approval->remarks = $reason;
-        $result = $approval->save();
+        $purchase_request->status = $status;
+        $purchase_request->remarks = $reason;
+        $result = $purchase_request->save();
+
+
+        $notification = new Notification;
+        $notification->sender = $notification_sender;
+        $notification->sender_department = $department;
+        $notification->receiver_department = $purchase_request->department;
+        $notification->message = $request->status == 'Approved' ? 'Your purchase request has been approved by ' . $notification_sender . ' from ' . $department . '.' : 'Your purchase request has been rejected by ' . $notification_sender . ' from ' . $department . '.';
+        $notification->save();
 
         if ($result)
             return response()->json([

@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use App\Models\User;
+use App\Models\Session;
 
 class AuthController extends Controller
 {
@@ -19,7 +20,32 @@ class AuthController extends Controller
             ], 401);
         }
 
+        if($user->status == 'Inactive'){
+            return response([
+                'message' => ['This account is not activated.']
+            ], 401);
+        }
+
         $token = $user->createToken('personal-token')->plainTextToken;
+
+        $deviceName = $request->header('User-Agent');
+        $existingSession = Session::where('user_id', $user->id)
+                                ->where('device_name', $deviceName)
+                                ->first();
+
+        if ($existingSession)
+            return response()
+                ->json(compact('token', 'user'))
+                ->header('authorization', $token)
+                ->header('Access-Control-Expose-Headers', 'Authorization');
+
+        $session = new Session;
+        $session->user_id = $user->id;
+        $session->device_name = $request->header('User-Agent');
+        $session->ip_address = $request->ip();
+        $session->user_agent = $request->header('User-Agent');
+        $session->session_id = session()->getId();
+        $result = $session->save();
 
         return response()
                 ->json(compact('token', 'user'))
@@ -30,10 +56,10 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         if(auth()->user())
-            auth()->user()->tokens()->delete();
+            auth()->user()->currentAccessToken()->delete();
 
         return response([
-            'message' => ['Logged out.']
+            'message' => 'Logged out.'
         ], 200);
     }
 
@@ -52,5 +78,24 @@ class AuthController extends Controller
     {
         $user = User::find(auth()->id());
         return response([$user], 200);
+    }
+
+    public function logout_all(Request $request)
+    {
+        if(auth()->user()){
+            auth()->user()->sessions()->delete();
+            auth()->user()->tokens()->delete();
+        }
+
+        return response([
+            'message' => 'Logged out all devices.'
+        ], 200);
+    }
+
+    public function active_sessions()
+    {
+        $sessions = auth()->user()->sessions;
+
+        return response()->json(['retrievedData' => $sessions]);
     }
 }

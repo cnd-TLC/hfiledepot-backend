@@ -16,9 +16,15 @@ class PpmpItemsCatalogController extends Controller
         ]);
     }
     
-    public function index($size)
+    public function index(Request $request, $size)
     {
-        $data = PpmpItemsCatalog::paginate($size);
+        $data = PpmpItemsCatalog::where(function ($query) use ($request) {
+                    $query->where('general_desc', 'LIKE', "%$request->search%")
+                        ->orWhere('unit', 'LIKE', "%$request->search%")
+                        ->orWhere('year', 'LIKE', "%$request->search%")
+                        ->orWhere('department', 'LIKE', "%$request->search%");
+                    })
+                    ->paginate($size);
 
         return response()->json([
             'retrievedData' => $data->items(),

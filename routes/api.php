@@ -14,6 +14,7 @@ use App\Http\Controllers\AttachmentsController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\ImportController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,13 +31,17 @@ use App\Http\Controllers\DashboardController;
 Route::post('login', [AuthController::class, 'login']);
 
 // LOGOUT
-Route::post('logout', [AuthController::class, 'logout']);
 
 Route::middleware('auth:sanctum')->group(function(){
     
     // LOGIN INFO
+    Route::post('logout', [AuthController::class, 'logout']);
+    Route::post('logout_all', [AuthController::class, 'logout_all']);
     Route::get('user', [AuthController::class, 'user']);
     Route::get('refresh', [AuthController::class, 'refresh']);
+    Route::get('active_sessions', [AuthController::class, 'active_sessions']);
+
+    Route::put('update_password', [PasswordController::class, 'update_password']);
 
     Route::get('list_of_users/{size}', [UserController::class, 'index']);
     Route::post('add_users', [UserController::class, 'store']);
@@ -88,11 +93,12 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::get('download_attachment/{type}/{id}/{file}', [AttachmentsController::class, 'download']);
     Route::delete('remove_attachment/{type}/{id}/{file}', [AttachmentsController::class, 'destroy']);
 
-    Route::get('export_users', [ExportController::class, 'export_users']);
+    Route::get('export_files/{type}/{id}', [ExportController::class, 'export_files']);
     Route::post('import_files/{type}/{id}', [ImportController::class, 'import_files']);
 
     Route::get('requests_for_approval/{year}', [DashboardController::class, 'getPendingCount']);
     Route::get('requests_per_office/{year}', [DashboardController::class, 'getOfficeRequestsCount']);
     Route::get('department_requests_count/{status}/{year}', [DashboardController::class, 'getDepartmentRequestsStatusCount']);
+    Route::get('notifications/{year}', [DashboardController::class, 'getNotifications']);
 
 });

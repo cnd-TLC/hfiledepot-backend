@@ -17,9 +17,13 @@ class RolesAndPermissionsController extends Controller
         ]);
     }
 
-    public function index($size)
+    public function index(Request $request, $size)
     {
-        $data = RolesAndPermissions::paginate($size);
+        $data = RolesAndPermissions::where(function ($query) use ($request) {
+                    $query->where('role', 'LIKE', "%$request->search%")
+                        ->orWhere('description', 'LIKE', "%$request->search%");
+                    })
+                    ->paginate($size);
 
         return response()->json([
             'retrievedData' => $data->items(),

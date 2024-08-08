@@ -61,17 +61,20 @@ class AttachmentsController extends Controller
 
             if ($result)
                 return response()->json([
-                    'message' => 'Files uploaded successfully'
+                    'message' => 'Files uploaded successfully',
+                    'status' => 'success'
                 ]);
 
             return response()->json([
-                'message' => 'File not saved to database.'
-            ], 400);
+                'message' => 'File not saved to database.',
+                'status' => 'error'
+            ], 200);
         }
         
         return response()->json([
-            'message' => 'No files were uploaded.'
-        ], 400);
+            'message' => 'No files were uploaded.',
+            'status' => 'error'
+        ], 200);
     }
 
     public function destroy($type, $id, $file)
@@ -97,12 +100,14 @@ class AttachmentsController extends Controller
 
             if ($result)
                 return response()->json([
-                    'message' => 'File deleted successfully.'
+                    'message' => 'File deleted successfully.',
+                    'status' => 'success'
                 ], 200);
 
             return response()->json([
-                'message' => 'File not deleted from database.'
-            ], 400);
+                'message' => 'File not deleted from database.',
+                'status' => 'error'
+            ], 200);
         }
         else
             abort(404, 'File not found.');

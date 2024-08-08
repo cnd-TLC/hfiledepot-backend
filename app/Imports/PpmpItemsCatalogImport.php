@@ -9,24 +9,22 @@ use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
-use Maatwebsite\Excel\Concerns\SkipsOnError;
-use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 
 class PpmpItemsCatalogImport implements ToModel, WithBatchInserts, WithChunkReading, WithHeadingRow, WithValidation
 {
     private $departments = [
         'City Mayor\'s Office (CMO)',
-        'City Administrator\'s Office (CAO)',
-        'City Tourism Office (CTO)',
+        'City Administrator\'s Office (CAdmO)',
+        'City Tourism Office (CToO)',
         'City Planning and Development Office (CPDO)',
         'City Budget Office (CBO)',
-        'City Accountant\'s Office (CAO)',
+        'City Accountant\'s Office (CAccO)',
         'City General Services Office (CGSO)',
         'City Legal Office (CLO)',
         'City Human Resource Management Office (CHRMO)',
         'City Zoning Administration Office (CZAO)',
         'City Treasurer\'s Office (CTO)',
-        'City Assessor\'s Office (CAO)',
+        'City Assessor\'s Office (CAsO)',
         'City Civil Registrar\'s Office (CCRO)',
         'City Health Office (CHO)',
         'City Social Welfare and Development Office (CSWDO)',
@@ -40,11 +38,10 @@ class PpmpItemsCatalogImport implements ToModel, WithBatchInserts, WithChunkRead
         'BAPAS (BAPAS)',
         'Traffic and Security (TS)',
         'Market Operations (MO)',
-        'BAC Secretary (BAC)',
         'DILG-Sorsogon City (DILG)',
         'Sangguniang Panlungsod (SP)',
         'City Information and Communications Technology Office (CICTO)',
-        'BAC (BAC)',
+        'Bids and Awards Committee (BAC)'
     ]; 
 
     public function batchSize(): int
@@ -60,13 +57,9 @@ class PpmpItemsCatalogImport implements ToModel, WithBatchInserts, WithChunkRead
     public function rules(): array
     {
         return [
-            'department' => [
-                'required',
-                Rule::in($this->departments)
-            ],
+            'department' => 'required',
             'item' => 'required',
             'year' => 'required',
-            'unit' => 'required',
         ];
     }
 

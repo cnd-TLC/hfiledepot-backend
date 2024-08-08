@@ -44,4 +44,13 @@ class UsersExport implements FromQuery, Responsable, WithHeadings
     {
         return User::query();
     }
+
+    public function prepareRows($rows)
+    {
+        // Add some logging to help debug the issue
+        logger()->info('Preparing rows for export...');
+        logger()->info($rows);
+
+        return $rows;
+    }
 }
