@@ -176,10 +176,6 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-
-        // Excel
-        Maatwebsite\Excel\ExcelServiceProvider::class,
-
     ],
 
     /*
@@ -193,9 +189,9 @@ return [
     |
     */
 
-    'aliases' => Facade::defaultAliases()->merge([
-        // Excel
-        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
-    ])->toArray(),
+    // 'aliases' => Facade::defaultAliases()->merge([
+    //     // Excel
+    //     'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+    // ])->toArray(),
 
 ];

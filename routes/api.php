@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RolesAndPermissionsController;
-use App\Http\Controllers\PpmpItemsCatalogController;
+use App\Http\Controllers\PpmpItemsMasterListController;
 use App\Http\Controllers\ProcurementProjectManagementPlanController;
 use App\Http\Controllers\PpmpItemController;
 use App\Http\Controllers\PurchaseRequestController;
@@ -15,6 +15,7 @@ use App\Http\Controllers\ExportController;
 use App\Http\Controllers\ImportController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PasswordController;
+use App\Http\Controllers\AccountCodesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,11 +55,13 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::put('update_roles_and_permissions/{id}', [RolesAndPermissionsController::class, 'update']);
     Route::delete('remove_roles_and_permissions/{id}', [RolesAndPermissionsController::class, 'destroy']);
 
-    Route::get('list_of_department_ppmp_items_catalog', [PpmpItemsCatalogController::class, 'index_department']);
-    Route::get('list_of_ppmp_items_catalog/{size}', [PpmpItemsCatalogController::class, 'index']);
-    Route::post('add_ppmp_items_catalog', [PpmpItemsCatalogController::class, 'store']);
-    Route::put('update_ppmp_items_catalog/{id}', [PpmpItemsCatalogController::class, 'update']);
-    Route::delete('remove_ppmp_items_catalog/{id}', [PpmpItemsCatalogController::class, 'destroy']);
+    // Route::get('list_of_department_ppmp_items_catalog', [PpmpItemsCatalogController::class, 'index_department']);
+    // Route::get('list_of_ppmp_items_catalog/{size}', [PpmpItemsCatalogController::class, 'index']);
+    // Route::post('add_ppmp_items_catalog', [PpmpItemsCatalogController::class, 'store']);
+    // Route::put('update_ppmp_items_catalog/{id}', [PpmpItemsCatalogController::class, 'update']);
+    // Route::delete('remove_ppmp_items_catalog/{id}', [PpmpItemsCatalogController::class, 'destroy']);
+
+    Route::get('list_of_ppmp_master_list/{size}', [PpmpItemsMasterListController::class, 'index']);
 
     Route::get('list_of_ppmp/{size}', [ProcurementProjectManagementPlanController::class, 'index']);
     Route::get('list_of_user_ppmp/{size}', [ProcurementProjectManagementPlanController::class, 'index_user']);
@@ -73,12 +76,13 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::put('update_ppmp_items/{id}', [PpmpItemController::class, 'update']);
     Route::delete('remove_ppmp_items/{id}', [PpmpItemController::class, 'destroy']);
 
+    Route::get('get_pr/{id}', [PurchaseRequestController::class, 'prForMobile']);
     Route::get('list_of_pr/{size}', [PurchaseRequestController::class, 'index']);
     Route::get('list_of_user_pr/{size}', [PurchaseRequestController::class, 'index_user']);
     Route::post('add_pr', [PurchaseRequestController::class, 'store']);
     Route::put('update_pr/{id}', [PurchaseRequestController::class, 'update']);
     // Route::put('update_pr_purpose/{id}', [PurchaseRequestController::class, 'update_pr_purpose']);
-    Route::put('set_approval_pr_bac/{id}', [PurchaseRequestController::class, 'set_approval_bac']);
+    Route::put('set_pr_details/{id}', [PurchaseRequestController::class, 'set_pr_details']);
     Route::put('set_approval_pr/{id}', [PurchaseRequestController::class, 'set_approval']);
     Route::delete('remove_pr/{id}', [PurchaseRequestController::class, 'destroy']);
 
@@ -93,12 +97,14 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::get('download_attachment/{type}/{id}/{file}', [AttachmentsController::class, 'download']);
     Route::delete('remove_attachment/{type}/{id}/{file}', [AttachmentsController::class, 'destroy']);
 
-    Route::get('export_files/{type}/{id}', [ExportController::class, 'export_files']);
+    Route::get('export_files/{type}', [ExportController::class, 'export_files']);
     Route::post('import_files/{type}/{id}', [ImportController::class, 'import_files']);
 
     Route::get('requests_for_approval/{year}', [DashboardController::class, 'getPendingCount']);
     Route::get('requests_per_office/{year}', [DashboardController::class, 'getOfficeRequestsCount']);
     Route::get('department_requests_count/{status}/{year}', [DashboardController::class, 'getDepartmentRequestsStatusCount']);
     Route::get('notifications/{year}', [DashboardController::class, 'getNotifications']);
+
+    Route::get('list_of_account_codes', [AccountCodesController::class, 'index']);
 
 });

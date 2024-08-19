@@ -16,6 +16,10 @@ return new class extends Migration
         Schema::create('purchase_requests', function (Blueprint $table) {
             $table->id();
             $table->string('pr_no')->nullable();
+            $table->string('ris_no')->nullable();
+            $table->string('air_no')->nullable();
+            $table->string('ics_no')->nullable();
+            $table->string('insp_no')->nullable();
             $table->string('department');
             $table->string('section')->nullable();
             $table->string('requested_by');
@@ -36,6 +40,18 @@ return new class extends Migration
             $table->timestamp('approved_by_cgso', precision: 0)->nullable();
             $table->string('approved_by_cao_name')->nullable();
             $table->timestamp('approved_by_cao', precision: 0)->nullable();
+            $table->timestamp('bac_resolution', precision: 0)->nullable();
+            $table->timestamp('canvass', precision: 0)->nullable();
+            $table->timestamp('purchase_order', precision: 0)->nullable();
+            $table->timestamp('obr', precision: 0)->nullable();
+            $table->timestamp('ris', precision: 0)->nullable();
+            $table->timestamp('inspection_acceptance', precision: 0)->nullable();
+            $table->timestamp('abstract', precision: 0)->nullable();
+            $table->timestamp('voucher', precision: 0)->nullable();
+            $table->timestamp('notice_of_awards', precision: 0)->nullable();
+            $table->timestamp('notice_to_proceed', precision: 0)->nullable();
+            $table->timestamp('contract_of_agreement', precision: 0)->nullable();
+            $table->timestamp('lcrb', precision: 0)->nullable();
             $table->string('remarks')->nullable();
             $table->json('attachments')->nullable();
             $table->timestamps();

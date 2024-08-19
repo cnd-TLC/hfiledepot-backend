@@ -11,6 +11,10 @@ class PurchaseRequest extends Model
 
     protected $fillable = [
         'pr_no',
+        'ris_no',
+        'air_no',
+        'ics_no',
+        'insp_no',
         'department',
         'section',
         'requested_by',
@@ -31,6 +35,17 @@ class PurchaseRequest extends Model
         'approved_by_cgso',
         'approved_by_cao_name',
         'approved_by_cao',
-        'attachments'
+        'bac_resolution',
+        'canvass',
+        'purchase_order',
+        'obr',
+        'ris',
+        'inspection_acceptance',
+        'abstract',
+        'voucher',
+        'notice_of_awards',
+        'notice_to_proceed',
+        'contract_of_agreement',
+        'lcrb',
     ];
 }
