@@ -11,7 +11,7 @@ class AuthController extends Controller
 {
     public function login(Request $request)
     {
-        $user = User::where('users.username', $request->username)
+        $user = User::where('username', $request->username)
                     ->first();
         
         if(!$user || !Hash::check($request->password, $user->password)){
@@ -28,16 +28,23 @@ class AuthController extends Controller
 
         $token = $user->createToken('personal-token')->plainTextToken;
 
+        $user->online = true;
+        $user->last_online = date('Y-m-d H:i:s');
+        $user->save();
+
         $deviceName = $request->header('User-Agent');
         $existingSession = Session::where('user_id', $user->id)
                                 ->where('device_name', $deviceName)
                                 ->first();
 
+        // if ($existingSession)
+        //     return response()
+        //         ->json(compact('token', 'user'))
+        //         ->header('authorization', $token)
+        //         ->header('Access-Control-Expose-Headers', 'Authorization');
+
         if ($existingSession)
-            return response()
-                ->json(compact('token', 'user'))
-                ->header('authorization', $token)
-                ->header('Access-Control-Expose-Headers', 'Authorization');
+            $existingSession->delete();
 
         $session = new Session;
         $session->user_id = $user->id;
@@ -55,9 +62,13 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        if(auth()->user())
-            auth()->user()->currentAccessToken()->delete();
-
+        $user = auth()->user();
+        $user->online = false;
+        $user->last_online = date('Y-m-d H:i:s');
+        $user->save();
+        
+        $user->currentAccessToken()->delete();
+    
         return response([
             'message' => 'Logged out.'
         ], 200);

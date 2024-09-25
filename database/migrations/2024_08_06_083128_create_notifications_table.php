@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('sender_department');
             $table->string('receiver_department');
             $table->string('message');
+            $table->enum('type', ['document', 'ping'])->default('document');
             $table->timestamps();
         });
     }

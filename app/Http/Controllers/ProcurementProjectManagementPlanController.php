@@ -124,7 +124,15 @@ class ProcurementProjectManagementPlanController extends Controller
         $notification->sender = $notification_sender;
         $notification->sender_department = $department;
         $notification->receiver_department = $ppmp->pmo_end_user_dept;
-        $notification->message = $request->status == 'Approved' ? 'Your procurement project management plan has been approved by ' . $notification_sender . ' from ' . $department . '.' : 'Your procurement project management plan has been rejected by ' . $notification_sender . ' from ' . $department . '.';
+        $notification->message = $request->status == 'Approved' 
+            ? 'Your procurement project management plan has been approved by ' . $notification_sender . ' from ' . $department . '.'
+            : ($request->status == 'Rejected'
+                ? 'Your procurement project management plan has been rejected by ' . $notification_sender . ' from ' . $department . ($request->reason ? ' with the following reason(s): ["' . $request->reason . '"]' : '.') . '.'
+                : ($request->status == 'Pending'
+                    ? 'Your procurement project management plan has been set to pending by ' . $notification_sender . ' from ' . $department . ($request->reason ? ' with the following reason(s): ["' . $request->reason . '"]' : '.') . '.'
+                    : '')
+            );
+
         $notification->save();
 
         if ($result)

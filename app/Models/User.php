@@ -26,7 +26,9 @@ class User extends Authenticatable
         'department',
         'role',
         'status',
-        'permissions'
+        'permissions',
+        'online',
+        'last_online',
     ];
 
     /**

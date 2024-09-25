@@ -11,7 +11,6 @@ class PurchaseRequestController extends Controller
 {
     public function convertDate($dateString)
     {
-        date_default_timezone_set('Asia/Manila');
         $date = strtotime($dateString);
 
         return date('Y-m-d H:i:s', $date);
@@ -270,7 +269,8 @@ class PurchaseRequestController extends Controller
         $approval_user = null;
         $notification_sender = auth()->user()->name;
         $department = auth()->user()->department;
-        $status = 'Rejected';
+        $status = $request->status;
+        $initial_status = $status;
 
         if ($request->status == 'Approved'){
             $approval_user = $notification_sender;
@@ -314,12 +314,19 @@ class PurchaseRequestController extends Controller
         $notification->sender = $notification_sender;
         $notification->sender_department = $department;
         $notification->receiver_department = $purchase_request->department;
-        $notification->message = $request->status == 'Approved' ? 'Your purchase request has been approved by ' . $notification_sender . ' from ' . $department . '.' : 'Your purchase request has been rejected by ' . $notification_sender . ' from ' . $department . '.';
+        $notification->message = $request->status == 'Approved'
+            ? 'Your purchase request has been approved by ' . $notification_sender . ' from ' . $department . '.'
+            : ($request->status == 'Rejected'
+                ? 'Your purchase request has been rejected by ' . $notification_sender . ' from ' . $department . ($request->reason ? ' with the following reason(s): "' . $request->reason . '"' : '.') . '.'
+                : ($request->status == 'Pending'
+                    ? 'Your purchase request has been set to pending by ' . $notification_sender . ' from ' . $department . ($request->reason ? ' with the following reason(s): "' . $request->reason . '"' : '.') . '.'
+                    : '')
+            );
         $notification->save();
 
         if ($result)
             return response()->json([
-                'message' => 'PR Approved.'
+                'message' => $department != 'City Accountant\'s Office (CAccO)' && $initial_status == 'Approved.' ? 'PR Approved' : 'PR '.$status.'.'
             ]);
         return response()->json([
             'message' => 'Cannot configure the PR.'

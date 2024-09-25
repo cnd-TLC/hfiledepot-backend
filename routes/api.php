@@ -31,12 +31,12 @@ use App\Http\Controllers\AccountCodesController;
 // LOGIN
 Route::post('login', [AuthController::class, 'login']);
 
-// LOGOUT
 
 Route::middleware('auth:sanctum')->group(function(){
+    // LOGOUT
+    Route::post('logout', [AuthController::class, 'logout']);
     
     // LOGIN INFO
-    Route::post('logout', [AuthController::class, 'logout']);
     Route::post('logout_all', [AuthController::class, 'logout_all']);
     Route::get('user', [AuthController::class, 'user']);
     Route::get('refresh', [AuthController::class, 'refresh']);
@@ -45,6 +45,7 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::put('update_password', [PasswordController::class, 'update_password']);
 
     Route::get('list_of_users/{size}', [UserController::class, 'index']);
+    Route::get('list_of_online_users/{size}', [UserController::class, 'online_users']);
     Route::post('add_users', [UserController::class, 'store']);
     Route::put('update_users/{id}', [UserController::class, 'update']);
     Route::delete('remove_users/{id}', [UserController::class, 'destroy']);

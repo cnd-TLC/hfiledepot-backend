@@ -17,7 +17,6 @@ return new class extends Migration
             $table->id();
             $table->string('general_desc');
             $table->string('unit')->nullable();
-            // $table->enum('mode_of_procurement', ['Bidding', 'Shopping']);
             $table->integer('year');
             $table->string('department');
             $table->timestamps();
