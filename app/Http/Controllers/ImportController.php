@@ -37,6 +37,7 @@ class ImportController extends Controller
     {
         $files = $request->file('attachments');
         try {
+            $iterator_ctr = 0;
             foreach ($files as $file){
                 $iterator_ctr = 0;
                 $reader =   IOFactory::createReader('Xlsx');
@@ -74,9 +75,9 @@ class ImportController extends Controller
                         $item->code = $this->code($id);
                         $item->category = $cell_array[0];
                         $item->general_desc = $cell_array[1];
-                        $item->unit = $cell_array[2];
-                        $item->quantity = $cell_array[3] != '' ? $cell_array[3] : null;
-                        $item->lumpsum = $item->quantity == null ? 1 : 0;
+                        $item->unit = $cell_array[2] != '' ? $cell_array[2] : null;
+                        $item->quantity = $cell_array[3];
+                        $item->lumpsum = $item->unit == null ? 1 : 0;
                         $item->mode_of_procurement = $cell_array[4];
                         $item->estimated_budget = $cell_array[5];
                         $item->jan = $cell_array[6];
@@ -110,11 +111,11 @@ class ImportController extends Controller
 
                         $item = new PrItem;
                         $item->item_no = $cell_array[0];
-                        $item->unit = $ppmp_item->unit;
+                        $item->unit = $ppmp_item->lumpsum ? null : $ppmp_item->unit;
                         $item->category = $ppmp_item->category;
                         $item->item_description = $ppmp_item->general_desc;
-                        $item->quantity = $cell_array[2] != '' ? $cell_array[2] : null;
-                        $item->lumpsum = $item->quantity == null ? 1 : 0;
+                        $item->quantity = $cell_array[2];
+                        $item->lumpsum = $item->unit == null ? 1 : 0;
                         $item->unit_cost = $cell_array[1];
                         $item->mode_of_procurement = $ppmp_item->mode_of_procurement;
                         $item->remarks = $ppmp_item->remarks;

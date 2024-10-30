@@ -326,10 +326,43 @@ class PurchaseRequestController extends Controller
 
         if ($result)
             return response()->json([
-                'message' => $department != 'City Accountant\'s Office (CAccO)' && $initial_status == 'Approved.' ? 'PR Approved' : 'PR '.$status.'.'
+                'message' => $department != 'City Accountant\'s Office (CAccO)' && $initial_status == 'Approved' ? 'PR Approved' : 'PR '.$status
             ]);
         return response()->json([
             'message' => 'Cannot configure the PR.'
         ], 400);   
+    }
+
+    public function ping($id, $cbo, $cto, $cmo, $bac, $cgso, $cao)
+    {
+
+        if($cbo == 'null')
+            $department = 'City Budget Office (CBO)';
+        else if($cto == 'null')
+            $department = 'City Treasurer\'s Office (CTO)';
+        else if($cmo == 'null')
+            $department = 'City Mayor\'s Office (CMO)';
+        else if($bac == 'null')
+            $department = 'Bids and Awards Committee (BAC)';
+        else if($cgso == 'null')
+            $department = 'City General Services Office (CGSO)';
+        else if($cao == 'null')
+            $department = 'City Accountant\'s Office (CAccO)';
+        else
+            return response()->json([
+                'message' => 'All departments are present, no ping needed.'
+            ]); 
+
+        $notification = new Notification;
+        $notification->sender = auth()->user()->name;
+        $notification->sender_department = auth()->user()->department;
+        $notification->receiver_department = $department;
+        $notification->message = 'Please make an update on the approval of PR with Tracking No. '.$id.'.';
+        $notification->type = 'ping';
+        $notification->save();
+
+        return response()->json([
+            'message' => 'Ping successful!'
+        ]);
     }
 }

@@ -13,6 +13,7 @@ class Notification extends Model
         'sender',
         'sender_department',
         'receiver_department',
-        'message'
+        'message',
+        'type'
     ];
 }

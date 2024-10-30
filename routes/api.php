@@ -86,6 +86,7 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::put('set_pr_details/{id}', [PurchaseRequestController::class, 'set_pr_details']);
     Route::put('set_approval_pr/{id}', [PurchaseRequestController::class, 'set_approval']);
     Route::delete('remove_pr/{id}', [PurchaseRequestController::class, 'destroy']);
+    Route::post('ping/{id}/{cbo}/{cto}/{cmo}/{bac}/{cgso}/{cao}', [PurchaseRequestController::class, 'ping']);
 
     Route::get('list_of_department_ppmp_items', [PrItemController::class, 'index_department']);
     Route::get('list_of_pr_items/{id}/{size}', [PrItemController::class, 'index']);

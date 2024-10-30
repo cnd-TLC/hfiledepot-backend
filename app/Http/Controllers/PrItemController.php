@@ -46,10 +46,10 @@ class PrItemController extends Controller
     {
         $item = new PrItem;
         $item->item_no = $request->item_no;
-        $item->unit = $request->unit;
+        $item->unit = $request->lumpsum ? null : $request->unit;
         $item->category = $request->category;
         $item->item_description = $request->item_description;
-        $item->quantity = $request->lumpsum ? null : $request->quantity;
+        $item->quantity = $request->quantity;
         $item->unit_cost = $request->unit_cost;
         $item->lumpsum = $request->lumpsum;
         $item->mode_of_procurement = $request->mode_of_procurement;
@@ -70,10 +70,10 @@ class PrItemController extends Controller
     {
         $item = PrItem::find($id);
         $item->item_no = $request->item_no;
-        $item->unit = $request->unit;
+        $item->unit = $request->lumpsum ? null : $request->unit;
         $item->category = $request->category;
         $item->item_description = $request->item_description;
-        $item->quantity = $request->lumpsum ? null : $request->quantity;
+        $item->quantity = $request->quantity;
         $item->unit_cost = $request->unit_cost;
         $item->lumpsum = $request->lumpsum;
         $item->mode_of_procurement = $request->mode_of_procurement;

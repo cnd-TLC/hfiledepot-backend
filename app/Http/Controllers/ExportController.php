@@ -125,8 +125,9 @@ class ExportController extends Controller
             $import_sheet->setCellValue('D1', 'PR_ID');
 
             $import_sheet->setCellValue('A2', 'select from dropdown or check items sheet');
-            $import_sheet->setCellValue('C2', ' leave blank if lumpsum');
+            // $import_sheet->setCellValue('C2', ' leave blank if lumpsum');
             $import_sheet->mergeCells('B1:B2', Worksheet::MERGE_CELL_CONTENT_HIDE);
+            $import_sheet->mergeCells('C1:C2', Worksheet::MERGE_CELL_CONTENT_HIDE);
             $import_sheet->mergeCells('D1:D2', Worksheet::MERGE_CELL_CONTENT_HIDE);
 
             $import_sheet->getStyle('B1:B2')->applyFromArray($mergedHeadingStyle);
@@ -181,8 +182,8 @@ class ExportController extends Controller
                 $items_sheet->setCellValue("A$iterator_ctr", $item->code);
                 $items_sheet->setCellValue("B$iterator_ctr", $item->category);
                 $items_sheet->setCellValue("C$iterator_ctr", $item->general_desc);
-                $items_sheet->setCellValue("D$iterator_ctr", $item->unit);
-                $items_sheet->setCellValue("E$iterator_ctr", $item->quantity ? $item->quantity : 'lumpsum');
+                $items_sheet->setCellValue("D$iterator_ctr", $item->lumpsum ? 'lumpsum' : $item->unit);
+                $items_sheet->setCellValue("E$iterator_ctr", $item->quantity);
                 $items_sheet->setCellValue("F$iterator_ctr", $item->mode_of_procurement);
                 $items_sheet->setCellValue("G$iterator_ctr", $item->estimated_budget);
                 $items_sheet->setCellValue("H$iterator_ctr", $item->jan);

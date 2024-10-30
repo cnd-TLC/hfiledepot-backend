@@ -51,8 +51,8 @@ class PpmpItemController extends Controller
         $item->code = $request->code;
         $item->category = $request->category;
         $item->general_desc = $request->general_desc;
-        $item->unit = $request->unit;
-        $item->quantity = $request->lumpsum ? null : $request->quantity;
+        $item->unit = $request->lumpsum ? null : $request->unit;
+        $item->quantity = $request->quantity;
         $item->lumpsum = $request->lumpsum;
         $item->mode_of_procurement = $request->mode_of_procurement;
         $item->estimated_budget = $request->estimated_budget;
@@ -86,8 +86,8 @@ class PpmpItemController extends Controller
         $item->code = $request->code;
         $item->category = $request->category;
         $item->general_desc = $request->general_desc;
-        $item->unit = $request->unit;
-        $item->quantity = $request->lumpsum ? null : $request->quantity;
+        $item->unit = $request->lumpsum ? null : $request->unit;
+        $item->quantity = $request->quantity;
         $item->lumpsum = $request->lumpsum;
         $item->mode_of_procurement = $request->mode_of_procurement;
         $item->estimated_budget = $request->estimated_budget;
